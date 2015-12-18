@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="OAuthIntegrationModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ThirdPartyServices">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="ServiceName" Type="varchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ThirdPartyUserIdentity">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Token" Type="varchar(max)" Nullable="false" />
+          <Property Name="RefreshToken" Type="varchar(max)" Nullable="false" />
+          <Property Name="TokenExpirationDate" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="LastSync" Type="datetime2" Precision="7" />
+          <Property Name="ServiceId" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_ThirdPartyUserIdentity_ThirdPartyServices">
+          <End Role="ThirdPartyServices" Type="Self.ThirdPartyServices" Multiplicity="1" />
+          <End Role="ThirdPartyUserIdentity" Type="Self.ThirdPartyUserIdentity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ThirdPartyServices">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ThirdPartyUserIdentity">
+              <PropertyRef Name="ServiceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="OAuthIntegrationModelStoreContainer">
+          <EntitySet Name="ThirdPartyServices" EntityType="Self.ThirdPartyServices" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ThirdPartyUserIdentity" EntityType="Self.ThirdPartyUserIdentity" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ThirdPartyUserIdentity_ThirdPartyServices" Association="Self.FK_ThirdPartyUserIdentity_ThirdPartyServices">
+            <End Role="ThirdPartyServices" EntitySet="ThirdPartyServices" />
+            <End Role="ThirdPartyUserIdentity" EntitySet="ThirdPartyUserIdentity" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="OAuthIntegrationModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="OAuthIntegrationEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ThirdPartyServices" EntityType="OAuthIntegrationModel.ThirdPartyServices" />
+          <EntitySet Name="ThirdPartyUserIdentity" EntityType="OAuthIntegrationModel.ThirdPartyUserIdentity" />
+          <AssociationSet Name="FK_ThirdPartyUserIdentity_ThirdPartyServices" Association="OAuthIntegrationModel.FK_ThirdPartyUserIdentity_ThirdPartyServices">
+            <End Role="ThirdPartyServices" EntitySet="ThirdPartyServices" />
+            <End Role="ThirdPartyUserIdentity" EntitySet="ThirdPartyUserIdentity" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="ThirdPartyServices">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="ServiceName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ThirdPartyUserIdentity" Relationship="OAuthIntegrationModel.FK_ThirdPartyUserIdentity_ThirdPartyServices" FromRole="ThirdPartyServices" ToRole="ThirdPartyUserIdentity" />
+        </EntityType>
+        <EntityType Name="ThirdPartyUserIdentity">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Token" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="RefreshToken" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="TokenExpirationDate" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="LastSync" Type="DateTime" Precision="7" />
+          <Property Name="ServiceId" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="ThirdPartyServices" Relationship="OAuthIntegrationModel.FK_ThirdPartyUserIdentity_ThirdPartyServices" FromRole="ThirdPartyUserIdentity" ToRole="ThirdPartyServices" />
+        </EntityType>
+        <Association Name="FK_ThirdPartyUserIdentity_ThirdPartyServices">
+          <End Type="OAuthIntegrationModel.ThirdPartyServices" Role="ThirdPartyServices" Multiplicity="1" />
+          <End Type="OAuthIntegrationModel.ThirdPartyUserIdentity" Role="ThirdPartyUserIdentity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ThirdPartyServices">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ThirdPartyUserIdentity">
+              <PropertyRef Name="ServiceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="OAuthIntegrationModelStoreContainer" CdmEntityContainer="OAuthIntegrationEntities">
+          <EntitySetMapping Name="ThirdPartyServices">
+            <EntityTypeMapping TypeName="OAuthIntegrationModel.ThirdPartyServices">
+              <MappingFragment StoreEntitySet="ThirdPartyServices">
+                <ScalarProperty Name="ServiceName" ColumnName="ServiceName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ThirdPartyUserIdentity">
+            <EntityTypeMapping TypeName="OAuthIntegrationModel.ThirdPartyUserIdentity">
+              <MappingFragment StoreEntitySet="ThirdPartyUserIdentity">
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
+                <ScalarProperty Name="LastSync" ColumnName="LastSync" />
+                <ScalarProperty Name="TokenExpirationDate" ColumnName="TokenExpirationDate" />
+                <ScalarProperty Name="RefreshToken" ColumnName="RefreshToken" />
+                <ScalarProperty Name="Token" ColumnName="Token" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
